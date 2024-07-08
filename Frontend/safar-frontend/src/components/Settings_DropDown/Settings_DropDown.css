@@ -1,0 +1,30 @@
+.settings_dropdown {
+    background-color: white;
+    width: 180px;
+    position: absolute;
+    top: 4.2rem;
+    right: 0rem;
+    
+     
+}
+#opt1{
+    color: black;
+}
+#item1{
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.2);
+    display: flex;
+}
+#item2{
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.2);
+    display: flex;
+}
+.arrow{
+    background-color: black;
+    width :250px;
+    height :250px;
+    position: absolute;
+    z-index: 2;
+   
+    
+     
+}

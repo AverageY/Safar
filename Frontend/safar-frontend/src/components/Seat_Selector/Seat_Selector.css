@@ -1,0 +1,30 @@
+.seatselectorbox{
+  height: 300px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.seatselectoricon{
+    height: 37px;
+    width: 37px;
+    color: black;
+}
+.car{
+    background-image: url('../../assets/Screenshot\ 2024-07-04\ at\ 2.51.00\ PM.png');
+    padding: 5px 5px 5px 5px;
+    width: 150px;
+    height: 280px;
+    border-radius: 4px;
+    margin-left: 67.5px;
+}
+
+.frontseat{
+    margin-left: -35px;
+    margin-top: 100px;
+}
+.middleseat{
+    margin-top: 20px;
+    margin-left: -37px;
+}

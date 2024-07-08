@@ -1,0 +1,11 @@
+.seat_button{
+    background: none;
+    border: none;
+}
+
+.seat_button:hover .seatselectoricon {
+    color: green;
+}
+.seat_button:active .seatselectoricon {
+    height: 10px;
+}
