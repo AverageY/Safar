@@ -2,6 +2,7 @@ package com.safar.Backend.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.safar.Backend.annotation.PasswordValidator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -32,7 +33,7 @@ public class User extends BaseEntity{
     private String userName;
 
     @NotBlank(message="Mobile number must not be blank")
-   // @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+    @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
     private String mobileNum;
 
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)
@@ -47,7 +48,7 @@ public class User extends BaseEntity{
     @NotBlank(message="Password must not be blank")
     @Size(min=5, message="Password must be at least 5 characters long")
     @PasswordValidator
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pswd;
 
     @NotBlank(message="Type must not be blank")
