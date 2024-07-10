@@ -34,14 +34,14 @@ public class SafarSecurityAuthenticationProvider implements AuthenticationProvid
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
 
-        String mobileNum = authentication.getName();
-
+        String userName = authentication.getName();
+    log.info(userName);
         String pswd = authentication.getCredentials().toString();
-        User user = userRepository.findByMobileNum(mobileNum);
+        User user = userRepository.findByUserName(userName);
         if(null != user && user.getUserId()>0 &&
                 passwordEncoder.matches(pswd,user.getPswd())){
             return new UsernamePasswordAuthenticationToken(
-                    mobileNum, pswd, getGrantedAuthorities(user.getRoles()));
+                    user, pswd, getGrantedAuthorities(user.getRoles()));
         }else{
             throw new BadCredentialsException("Invalid credentials!");
         }

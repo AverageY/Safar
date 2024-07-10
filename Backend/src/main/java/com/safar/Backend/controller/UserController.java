@@ -1,13 +1,13 @@
 package com.safar.Backend.controller;
-import com.safar.Backend.constant.SafarConstant;
+
+import com.safar.Backend.model.Driver;
 import com.safar.Backend.model.User;
 import com.safar.Backend.payload.LoginDto;
+import com.safar.Backend.repository.DriverRepository;
 import com.safar.Backend.repository.RolesRepository;
 import com.safar.Backend.repository.UserRepository;
 import com.safar.Backend.security.SafarSecurityAuthenticationProvider;
 import com.safar.Backend.service.UserService;
-
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,19 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-
-
 import jakarta.validation.Valid;
 
 @Slf4j
@@ -45,6 +38,8 @@ public class UserController {
     @Autowired
     private RolesRepository rolesRepository;
     @Autowired
+    private DriverRepository driverRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private SafarSecurityAuthenticationProvider safarSecurityAuthenticationProvider;
@@ -59,6 +54,12 @@ public class UserController {
             user = userService.createNewUser(user);
         }
         log.info(user.toString());
+        if(user.getUserType().equalsIgnoreCase("Driver")){
+            Driver driver = new Driver();
+        driver.setUser(user);
+        driver = driverRepository.save(driver);
+
+        }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(user);
@@ -68,24 +69,30 @@ public class UserController {
 
 
         @PostMapping("/login")
-        public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto,HttpServletRequest request) {
-            try{
-            String mobileNum = loginDto.getMobileNum();
+        public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto,HttpServletRequest request, User user) {
+
+            String userName = loginDto.getUserName();
 
             String pswd = loginDto.getPswd();
 
-                UsernamePasswordAuthenticationToken authReq =
-                        new UsernamePasswordAuthenticationToken(mobileNum, pswd);
-                Authentication auth = safarSecurityAuthenticationProvider.authenticate(authReq);
+            UsernamePasswordAuthenticationToken authReq =
+                    new UsernamePasswordAuthenticationToken(userName, pswd);
+            Authentication auth = safarSecurityAuthenticationProvider.authenticate(authReq);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", mobileNum);
 
-            return ResponseEntity.ok("User logged in successfully" +session.getAttribute("user"));
-        }catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-            }}
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            HttpSession session = request.getSession(true);
+            if (authentication != null && authentication.getPrincipal() instanceof User) {
+                user = (User)authentication.getPrincipal();
+
+                log.info(user.toString());
+                session.setAttribute("userId", user.getUserId());
+                log.info(session.getAttribute("userId").toString());
+            }
+
+            return ResponseEntity.ok("User logged in successfully" + session.getAttribute("userId").toString());
+        }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
@@ -117,6 +124,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
         }
     }*/
+
+        @GetMapping("/user")
+    public ResponseEntity<?> getUser(HttpServletRequest request) {
+            HttpSession session = request.getSession(true);
+
+
+            return ResponseEntity.ok(userRepository.findById((Integer)session.getAttribute("userId")))   ;
+        }
+
+        @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+            return ResponseEntity.ok(userRepository.findAll());
+        }
         }
 
 

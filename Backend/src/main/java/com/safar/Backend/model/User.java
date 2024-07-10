@@ -25,15 +25,17 @@ public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-
+    @Column(name = "user_id")
     private int userId;
 
     @NotBlank(message="Name must not be blank")
     @Size(min=3, message="Name must be at least 3 characters long")
+    @Column(unique = true)
     private String userName;
 
     @NotBlank(message="Mobile number must not be blank")
     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+    @Column(unique = true)
     private String mobileNum;
 
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)

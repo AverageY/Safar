@@ -29,10 +29,9 @@ public class ProjectSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
 
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/logout").permitAll()
-
                         .requestMatchers("/*").permitAll()
+                        .requestMatchers("/driver/**").permitAll()
+
 
 
 
