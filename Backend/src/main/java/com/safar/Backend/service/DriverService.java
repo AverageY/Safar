@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class DriverService {
@@ -27,6 +29,7 @@ public class DriverService {
     private UserRepository userRepository;
 
     private Driver driver;
+    //serves /addcab
     public Driver addCabToDriver( @Valid Cab cab, HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         if (session == null) {
@@ -53,6 +56,7 @@ public class DriverService {
         driver = driverRepository.save(driver);
         return driver;
     }
+    //serves /getcabs
     public List<Cab> getCabsByDriverId( HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         if (session == null) {
@@ -66,6 +70,12 @@ public class DriverService {
         Driver driver = driverRepository.findByUserUserId(userId);
         return driver.getCabs();
     }
+    //serves /getdriver?driverId
+    public Driver getDriverDetails(Integer driverId) {
+        Optional<Driver> driver = driverRepository.findById(driverId);
+        return driver.orElse(null);
+    }
+
 }
 
 

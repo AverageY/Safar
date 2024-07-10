@@ -53,6 +53,15 @@ public class DriverController {
         return ResponseEntity.ok(cabs);
     }
 
+    @GetMapping("/getdriver")
+    public ResponseEntity<Driver> getDriver(@RequestParam Integer driverId) {
+        Driver driver = driverService.getDriverDetails(driverId);
+        if (driver == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(driver);
+    }
+
 
 
 }
