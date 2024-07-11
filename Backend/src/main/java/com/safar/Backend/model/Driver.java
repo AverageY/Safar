@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,10 +24,13 @@ public class Driver extends BaseEntity{
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Cab> cabs;
+    private List<Cab> cabs = new ArrayList<>();
 
     @Column(name = "trip_id", nullable = true)
-    private Integer tripId;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Trip> trips;
+
 
 
 }

@@ -1,67 +1,49 @@
 package com.safar.Backend.controller;
 
-
 import com.safar.Backend.model.Cab;
-import com.safar.Backend.repository.DriverRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import com.safar.Backend.model.Driver;
+import com.safar.Backend.payload.ApiResponse;
 import com.safar.Backend.service.DriverService;
-import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-@Slf4j
 @RestController
-@RequestMapping(path = "/driver",produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin(origins="*")
+@RequestMapping("/driver")
 public class DriverController {
+
     @Autowired
     private DriverService driverService;
-    @Autowired
-    private DriverRepository driverRepository;
-
 
     @PostMapping("/addcab")
-        public ResponseEntity<?> addCab(@RequestBody Cab cab, HttpServletRequest httpServletRequest) {
-        Driver driver = driverService.addCabToDriver(cab, httpServletRequest);
-        if (driver == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add cab to driver.");
+    public ResponseEntity<?> addCabToDriver(@RequestBody Cab cab, HttpServletRequest request) {
+        try {
+            Driver driver = driverService.addCabToDriver(cab, request);
+            return ResponseEntity.ok(driver);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
-
-        return ResponseEntity
-                .ok(driver);
-
-
-
     }
 
     @GetMapping("/getcabs")
-        public ResponseEntity<?> getCabs(HttpServletRequest request) {
-        List<Cab> cabs = driverService.getCabsByDriverId(request);
-        return ResponseEntity.ok(cabs);
+    public ResponseEntity<?> getCabsByDriverId(HttpServletRequest request) {
+        try {
+            List<Cab> cabs = driverService.getCabsByDriverId(request);
+            return ResponseEntity.ok(cabs);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+        }
     }
 
     @GetMapping("/getdriver")
-    public ResponseEntity<Driver> getDriver(@RequestParam Integer driverId) {
+    public ResponseEntity<?> getDriverDetails(@RequestParam Integer driverId) {
         Driver driver = driverService.getDriverDetails(driverId);
         if (driver == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Driver not found"));
         }
         return ResponseEntity.ok(driver);
     }
-
-
-
 }

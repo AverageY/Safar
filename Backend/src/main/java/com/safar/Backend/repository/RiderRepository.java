@@ -1,10 +1,11 @@
 package com.safar.Backend.repository;
 
-import com.safar.Backend.model.Cab;
+
+import com.safar.Backend.model.Rider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CabRepository extends JpaRepository<Cab, Integer> {
- Cab findByCabId(int cabId);
+public interface RiderRepository extends JpaRepository<Rider, Integer> {
+
 }

@@ -29,8 +29,11 @@ public class ProjectSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
 
-                        .requestMatchers("/*").permitAll()
-                        .requestMatchers("/driver/**").permitAll()
+                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/driver/**").hasAnyRole("BASE", "ADMIN")
+                        .requestMatchers("/trip/**").hasAnyRole("BASE", "ADMIN")
+                        .anyRequest().authenticated()
 
 
 
