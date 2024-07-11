@@ -1,41 +1,35 @@
-import React from 'react';
-import { useState, useRef } from 'react';
-import { GoSignIn } from "react-icons/go";
-import './SignUp.css';
-import { easeOut, motion } from 'framer-motion';
-import Text_Input from '../Text_Inputs/Text_inputs';
-import Dropdown from '../DropDown/DropDown';
-import Image_Picker_image from '../../assets/images.jpeg'
-import { BiImageAdd } from "react-icons/bi";
+import React, { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import Axios from 'axios';
-import { useEffect } from 'react';
-import Image_Picker from '../Image_Picker/Image_Picker';
+import { useNavigate } from 'react-router-dom';
+import Image_Picker_image from '../../assets/images.jpeg';
+import './SignUp.css';
 
-const SignUp = (value) => {
-  
-  const url = 'http://localhost:3000/?'
-  const inputRef =  useRef("");
-  const [image, setImage] = useState("");
-  const [userData, setUserData]= useState({
-    name: "",
-    phoneNumber: "",
-    password: "",
-    type: "",
-    profileImage: "",
- 
-  })
+const SignUp = () => {
+  const navigate = useNavigate();
+  const url = 'http://localhost:4000/safar/register';
+  const inputRef = useRef('');
+  const [image, setImage] = useState('');
+  const [userData, setUserData] = useState({
+    userName: '',
+    mobileNum: '',
+    profileImg: '',
+    pswd: '',
+    userType: '',
+  });
 
-  const handleImageClick = ()=>{
+  const handleImageClick = () => {
     inputRef.current.click();
-  }
-  function handle(e){
-    const newUserData ={...userData}
-    newUserData[e.target.id] = e.target.value
-    setUserData(newUserData)
-    console.log(newUserData)
+  };
 
-  }
-  const handleImageChange = async(e)=>{
+  const handleInputChange = (e) => {
+    setUserData({
+      ...userData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const imgname = e.target.files[0].name;
 
@@ -45,117 +39,106 @@ const SignUp = (value) => {
     formData.append('cloud_name', 'dipzek90s'); // Replace with your Cloudinary cloud name
 
     try {
-      const response = await Axios.post("https://api.cloudinary.com/v1_1/dipzek90s/image/upload", formData);
+      const response = await Axios.post('https://api.cloudinary.com/v1_1/dipzek90s/image/upload', formData);
       const imageUrl = response.data.url;
       setImage(file);
-      setUserData({ ...userData, profileImage: imageUrl });
-      console.log(imageUrl);
+      setUserData({ ...userData, profileImg: imageUrl });
+      console.log(userData);
     } catch (error) {
-      console.error("Error uploading image: ", error);
+      console.error('Error uploading image: ', error);
     }
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-        const img = new Image();
-        img.src = reader.result;
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            const maxSize = Math.max(img.width, img.height);
-            canvas.width = maxSize;
-            canvas.height = maxSize;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(
-                img,
-                (maxSize - img.width)/2,
-                (maxSize - img.height)/2
-            );
-            canvas.toBlob(
-                (blob) =>{
-                    const file = new File([blob], imgname, {
-                        type: "image/png",
-                        lastModified: Date.now(),
-                    });
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = Math.max(img.width, img.height);
+        canvas.width = maxSize;
+        canvas.height = maxSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, (maxSize - img.width) / 2, (maxSize - img.height) / 2);
+        canvas.toBlob(
+          (blob) => {
+            const file = new File([blob], imgname, {
+              type: 'image/png',
+              lastModified: Date.now(),
+            });
 
-                    console.log(file);
-                    setImage(file)
-                },
-                "image/jpeg",
-                0.8
-            );
-        };
+            setImage(file);
+          },
+          'image/jpeg',
+          0.8
+        );
+      };
     };
+  };
 
-    handle(e);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios.post(url, {
+        userName: userData.userName,
+        mobileNum: userData.mobileNum,
+        pswd: userData.pswd,
+        userType: userData.userType,
+        profileImg: userData.profileImg,
+      });
 
-
-};
-
-  async function submit(e){
-    e.preventDefault()
-   /* await Axios.post(url,{
-      name: userData.name,
-      phoneNumber: userData.phoneNumber,
-      password: userData.password,
-      type: userData.type,
-      profileImage: userData.profileImage
-    })
-    .then(res=>{
-      console.log(res.userData)
-    })
-
-    await Axios.get('https://api.artic.edu/api/v1/artworks/search?q=cats')
-    .then( res=>{
-      console.log(res)
-    })
-    */
-  }
-
-
-
-
-   
-
-  
-    
-  return(
-
-  <div  className='sign_up_container'>
-      <div>
-       <p className='signuptext'>Sign Up!</p>
-
-      </div>
-     <form onSubmit={(e)=>submit(e)} className='signupForm'>
-      <div onClick={handleImageClick} className='image_picker'>
-      {
-           image ? <img className='img-display-after' src ={URL.createObjectURL(image)}/> : <img src={Image_Picker_image} className="img-display-before" alt="" />
+      if (response.status === 201) {
+        if (userData.userType === 'Cab Driver') {
+          navigate('/signup/addCab'); // Redirect to driver signup page
+        } else if (userData.userType === 'Student') {
+          navigate('/signup/student'); // Redirect to student signup page
         }
-       <input type = 'file' className='signupinput'  id='profileImage' ref={inputRef} onChange={handleImageChange} style= {{display: "none"}}></input>
-      </div>
-      <label>Enter Your Name:</label><br></br>
-      <input onChange={(e)=>handle(e)} className='signupinput' id ='name' value = {userData.name} placeholder='Name' type='text'></input><br></br>
-      <label>Enter Your Phone Number:</label><br></br>
-      <input onChange={(e)=>handle(e)} className='signupinput' id ='phoneNumber' value = {userData.phoneNumber} placeholder='Phone Number' type='tel'></input><br></br>
-      <label>Enter a Password:</label><br></br>
-      <input onChange={(e)=>handle(e)} className='signupinput' id ='password' value = {userData.password} placeholder='password' type='Password'></input><br></br>
-      <label>Select your Role:</label><br></br>
-      <select onChange={(e)=>handle(e)} className='signupinput' id ='type'> 
-        <option  value ='Staff'>Staff</option>
-        <option  value = 'Student'>Student</option>
-        <option  value = 'Cab Driver'>Cab Driver</option>
-      </select><br></br>
-      <button className='user_form_submit_button' >Submit</button>
-     </form>
-     
-   
+      }
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
+  };
 
-    
-    
-        
-   
-    
-       
-  </div>
-  )
+  return (
+    <div className="sign_up_container">
+      <div>
+        <p className="signuptext">Sign Up!</p>
+      </div>
+      <form onSubmit={handleSubmit} className="signupForm">
+        <div onClick={handleImageClick} className="image_picker">
+          {image ? (
+            <img className="img-display-after" src={URL.createObjectURL(image)} alt="Profile Preview" />
+          ) : (
+            <img src={Image_Picker_image} className="img-display-before" alt="Profile Placeholder" />
+          )}
+          <input type="file" className="signupinput" id="profileImg" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+        </div>
+        <label>Enter Your Name:</label>
+        <br />
+        <input onChange={handleInputChange} className="signupinput" id="userName" value={userData.userName} placeholder="Name" type="text" />
+        <br />
+        <label>Enter Your Phone Number:</label>
+        <br />
+        <input onChange={handleInputChange} className="signupinput" id="mobileNum" value={userData.mobileNum} placeholder="Phone Number" type="tel" />
+        <br />
+        <label>Enter a Password:</label>
+        <br />
+        <input onChange={handleInputChange} className="signupinput" id="pswd" value={userData.pswd} placeholder="password" type="Password" />
+        <br />
+        <label>Select your Role:</label>
+        <br />
+        <select onChange={handleInputChange} className="signupinput" id="userType">
+          <option value="Staff">Staff</option>
+          <option value="Student">Student</option>
+          <option value="Cab Driver">Cab Driver</option>
+        </select>
+        <br />
+        <button type="submit" className="user_form_submit_button">
+          Submit
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default SignUp;

@@ -1,0 +1,14 @@
+.side_bar{
+    background-color: #F5FEFD;
+    height: 800px;
+    padding-top: 30px;
+    padding-left: 10px;
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
+}
+
+.side_bar_search{
+    background-color: white;
+    width: 325px;
+    height: 400px;
+    
+}

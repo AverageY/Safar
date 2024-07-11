@@ -15,11 +15,10 @@ import Navbar_buttons from '../Navbar/Navbar_buttons/Navbar_buttons'
 import './Navbar.css';
 
 
-const Navbar = ({activeTab, setActiveTab}) => {
+const Navbar = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
   
+ 
 
-  const [displayClose, setDisplayClose] = useState()
-  
  
 
  return(
@@ -29,10 +28,10 @@ const Navbar = ({activeTab, setActiveTab}) => {
      </div>
      <div>
       {
-        (activeTab != 'animation')&& <button onClick={()=>{setActiveTab('animation')}}>close</button>
+        (activeTab !== 'animation')&& <button onClick={()=>{setActiveTab('animation')}}>close</button>
       }
      {
-        (activeTab == 'animation') && <Navbar_buttons activeTab={activeTab} setActiveTab = {setActiveTab} />
+        (activeTab === 'animation') && <Navbar_buttons activeTab={activeTab} setActiveTab = {setActiveTab} isLogedIn={isLogedIn} setIsLogedIn={setIsLogedIn} />
      }
      
    </div>

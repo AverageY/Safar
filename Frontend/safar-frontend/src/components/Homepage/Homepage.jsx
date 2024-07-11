@@ -18,17 +18,33 @@ import LogIn from '../Log_In/LogIn';
 import Image_Picker from '../Image_Picker/Image_Picker';
 import Ride_Page from './Homepage_Screens/Ride_Page/Ride_Page';
 
-const HomePage = () => {
+const HomePage = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn} ) => {
 
+    const getScreens = (tab) =>{
 
-  const [activeTab, setActiveTab] = useState('animation')
+        switch(tab){
+            case 'animation':
+            return <Landing_Page />
+            case 'signup':
+            return <Signup_Page />
+            case 'login':
+            return <Login_Page activeTab={activeTab} setActiveTab = {setActiveTab} isLogedIn={isLogedIn} setIsLogedIn={setIsLogedIn}/>
+            case 'ride':
+            return <Ride_Page />
+            case 'settings':
+            return <LogIn />
+            default:
+                return <Landing_Page_Side1 /> 
+        }
+    }
+
  
- 
+    setIsLogedIn(false)
  
 
   return(
    <div>
-    <Navbar activeTab={activeTab} setActiveTab = {setActiveTab}  />
+    <Navbar activeTab={activeTab} setActiveTab = {setActiveTab} isLogedIn={isLogedIn} setIsLogedIn={setIsLogedIn} />
     <div className= "main row justify-content-center d-flex flex-row-reverse flex-md-row">
         <div className="col-lg-12 col-sm-12  ">
         {getScreens(activeTab)}
@@ -40,23 +56,7 @@ const HomePage = () => {
   )
 };
 
-const getScreens = (tab) =>{
 
-    switch(tab){
-        case 'animation':
-        return <Landing_Page />
-        case 'signup':
-        return <Signup_Page />
-        case 'login':
-        return <Login_Page/>
-        case 'ride':
-        return <Ride_Page />
-        case 'settings':
-        return <LogIn />
-        default:
-            return <Landing_Page_Side1 /> 
-    }
-}
 
 
 export default HomePage;
