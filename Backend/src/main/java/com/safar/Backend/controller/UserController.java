@@ -28,9 +28,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @Slf4j
+
 @RestController
 @RequestMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-@CrossOrigin(origins = "*")
+
 public class UserController {
 
     @Autowired
@@ -45,14 +46,20 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private SafarSecurityAuthenticationProvider safarSecurityAuthenticationProvider;
+    @Autowired
+    private HttpServletRequest httpServletRequest;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user, Errors errors) {
+    public ResponseEntity<?> register(@Valid @RequestBody User user, Errors errors,HttpServletRequest request) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
         try {
             user = userService.createNewUser(user);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("userId", user.getUserId());
+
+
             if (user.getUserType().equalsIgnoreCase("Driver")) {
                 Driver driver = new Driver();
                 driver.setUser(user);
@@ -103,7 +110,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<?> getUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "User not logged in"));

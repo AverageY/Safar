@@ -39,7 +39,7 @@ public class TripService {
     private Driver driver;
 
     public Trip addTrip(TripDto tripdto, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new IllegalArgumentException("No active session found");
         }
@@ -89,7 +89,7 @@ public class TripService {
     }
 
     public Trip bookTrip(int tripId, TripRiderDto tripRiderDto, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new IllegalArgumentException("No active session found");
         }
@@ -131,7 +131,7 @@ public class TripService {
     }
 
     public Trip acceptTrip(int tripId, TripDriverDto tripDriverDto, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new IllegalArgumentException("No active session found");
         }
@@ -167,7 +167,7 @@ public class TripService {
     }
 
     public List<Trip> getTripsOfUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new IllegalArgumentException("No active session found");
         }

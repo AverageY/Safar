@@ -31,7 +31,7 @@ public class DriverService {
     private Driver driver;
     //serves /addcab
     public Driver addCabToDriver( @Valid Cab cab, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new RuntimeException("No session found. User is not logged in.");
         }
@@ -58,7 +58,7 @@ public class DriverService {
     }
     //serves /getcabs
     public List<Cab> getCabsByDriverId( HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         if (session == null) {
             throw new RuntimeException("No session found. User is not logged in.");
         }
