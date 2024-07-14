@@ -1,20 +1,14 @@
 package com.safar.Backend.payload;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Data
-public class TripDto {
-
+public class TripSearchDto {
     private String tripPickuplocation;
-    private String tripPickuppoint;
     private String tripDroplocation;
-    private double tripDistance;
     private String tripDeparturetime;
-    private Date tripDate;
-    private String tripCabtype;
-    private String tripSeat;
-
-
+    private @DateTimeFormat(pattern = "yyyy-MM-dd") Date tripDate;
 }

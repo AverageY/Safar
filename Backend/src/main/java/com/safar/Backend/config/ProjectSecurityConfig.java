@@ -2,6 +2,7 @@ package com.safar.Backend.config;
 
 import com.safar.Backend.security.SafarSecurityAuthenticationProvider;
 import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,11 +52,15 @@ public class ProjectSecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(sessionManagementConfigurer ->
-                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .logout(logoutConfigurer ->
                         logoutConfigurer.logoutSuccessUrl("/login?logout=true")
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    response.setStatus(HttpServletResponse.SC_OK);
+                                })
                                 .invalidateHttpSession(true)
+
                                 .permitAll()
                 )
                 .httpBasic(withDefaults());

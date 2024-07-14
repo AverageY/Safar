@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -56,6 +57,9 @@ public class Trip {
     @NotBlank(message = "Pickup time cant be blank")
     @Size(min = 3, message = "Min size for pickup time is 3")
     private String tripDeparturetime;
+
+    @NotBlank(message = "trip date cant be blank")
+    private Date tripDate;
 
     @NotBlank(message = "Cab type cant be blank")
     @Size(min = 3, message = "Min size for cab type is 3")

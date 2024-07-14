@@ -5,6 +5,7 @@ import com.safar.Backend.model.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -13,5 +14,6 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
     List<Trip> findByHostUserUserId(Integer userId);
     List<Trip> findByRidersUserUserId(Integer userId);  //many to many so Riders
     List<Trip> findByDriverUserUserId(Integer userId);
+    List<Trip> findByTripPickuplocationAndTripDroplocationAndTripDate(String tripPickuplocation, String tripDroplocation, Date tripDate);
 }
 

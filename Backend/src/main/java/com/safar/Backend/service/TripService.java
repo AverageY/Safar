@@ -4,16 +4,22 @@ import com.safar.Backend.model.*;
 import com.safar.Backend.payload.TripDriverDto;
 import com.safar.Backend.payload.TripDto;
 import com.safar.Backend.payload.TripRiderDto;
+import com.safar.Backend.payload.TripSearchDto;
 import com.safar.Backend.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -62,6 +68,7 @@ public class TripService {
         trip.setTripDroplocation(tripdto.getTripDroplocation());
         trip.setTripPickuppoint(tripdto.getTripPickuppoint());
         trip.setTripDeparturetime(tripdto.getTripDeparturetime());
+        trip.setTripDate(tripdto.getTripDate());
         trip.setTripCabtype(tripdto.getTripCabtype());
         trip.setTripDistance(tripdto.getTripDistance());
 
@@ -192,5 +199,19 @@ public class TripService {
         }
 
         return allTrips;
+    }
+    public List<Trip> searchTrips( TripSearchDto tripSearchDto) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime departureTime = LocalTime.parse(tripSearchDto.getTripDeparturetime(), timeFormatter);
+        List<Trip> trips = tripRepository.findByTripPickuplocationAndTripDroplocationAndTripDate(tripSearchDto.getTripPickuplocation(), tripSearchDto.getTripDroplocation(), tripSearchDto.getTripDate());
+
+        return trips.stream()
+                .filter(trip -> {
+                    LocalTime tripDepartureTime = LocalTime.parse(trip.getTripDeparturetime(), timeFormatter);
+                    // Compare the trip's departure time with the given departure time within 15 minutes
+                    long timeDifference = Math.abs(java.time.Duration.between(tripDepartureTime, departureTime).toMinutes());
+                    return timeDifference <= 15 * 60 * 1000; // 15 minutes in milliseconds
+                })
+                .collect(Collectors.toList());
     }
 }

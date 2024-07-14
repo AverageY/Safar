@@ -1,10 +1,7 @@
 package com.safar.Backend.controller;
 
 import com.safar.Backend.model.Trip;
-import com.safar.Backend.payload.ApiResponse;
-import com.safar.Backend.payload.TripDriverDto;
-import com.safar.Backend.payload.TripDto;
-import com.safar.Backend.payload.TripRiderDto;
+import com.safar.Backend.payload.*;
 import com.safar.Backend.repository.TripRepository;
 import com.safar.Backend.service.TripService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,5 +68,14 @@ public class TripController {
         }catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> searchTrip(@RequestBody TripSearchDto tripSearchDto){
+       try {
+           return ResponseEntity.ok(tripService.searchTrips(tripSearchDto));
+       }catch (RuntimeException e) {
+           return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
+       }
     }
 }

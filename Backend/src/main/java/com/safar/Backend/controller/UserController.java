@@ -95,16 +95,18 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null) {
                 new SecurityContextLogoutHandler().logout(request, response, auth);
             }
             SecurityContextHolder.clearContext();
-            return ResponseEntity.ok(new ApiResponse(true, "User logged out successfully"));
+            request.getSession().invalidate();
+            request.getSession().removeAttribute("userId");
+            return ResponseEntity.ok("User logged out successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "Invalid credentials"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
 
