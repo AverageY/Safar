@@ -70,12 +70,12 @@ public class TripController {
         }
     }
 
-    @PostMapping("/search")
+   /* @PostMapping("/search")
     public ResponseEntity<?> searchTrip(@RequestBody TripSearchDto tripSearchDto){
        try {
            return ResponseEntity.ok(tripService.searchTrips(tripSearchDto));
        }catch (RuntimeException e) {
            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
        }
-    }
+    }*/
 }

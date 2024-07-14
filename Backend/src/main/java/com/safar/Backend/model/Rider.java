@@ -35,9 +35,9 @@ public class Rider {
     @JsonManagedReference
     private List<Trip> trips = new ArrayList<>();
 
-    @NotBlank(message = "Pickup location cant be blank")
-    @Size(min = 3, message = "Min size for pickup location is 3")
-    private String tripPickup;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = Trippickup.class)
+    @JoinColumn(name = "trippickup_id", referencedColumnName = "trippickup_id")
+    private Trippickup trippickup;
 
     @NotBlank(message = "Seat cant be blank")
     @Size(min = 4, message = "Min size for seat is 4")

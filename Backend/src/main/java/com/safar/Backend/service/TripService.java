@@ -65,8 +65,9 @@ public class TripService {
         Trip trip = new Trip();
         trip.setHost(host);
         trip.setTripPickuplocation(tripdto.getTripPickuplocation());
+        trip.setTrippickup(tripdto.getTrippickup());
         trip.setTripDroplocation(tripdto.getTripDroplocation());
-        trip.setTripPickuppoint(tripdto.getTripPickuppoint());
+        trip.setTripdrop(tripdto.getTripdrop());
         trip.setTripDeparturetime(tripdto.getTripDeparturetime());
         trip.setTripDate(tripdto.getTripDate());
         trip.setTripCabtype(tripdto.getTripCabtype());
@@ -125,7 +126,7 @@ public class TripService {
 
         Rider rider = new Rider();
         rider.setUser(user);
-        rider.setTripPickup(tripRiderDto.getTripPickup());
+        rider.setTrippickup(tripRiderDto.getTrippickup());
         rider.setTripSeat(tripRiderDto.getTripSeat());
 
         trip.getRiders().add(rider);
@@ -200,7 +201,7 @@ public class TripService {
 
         return allTrips;
     }
-    public List<Trip> searchTrips( TripSearchDto tripSearchDto) {
+   /* public List<Trip> searchTrips( TripSearchDto tripSearchDto) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime departureTime = LocalTime.parse(tripSearchDto.getTripDeparturetime(), timeFormatter);
         List<Trip> trips = tripRepository.findByTripPickuplocationAndTripDroplocationAndTripDate(tripSearchDto.getTripPickuplocation(), tripSearchDto.getTripDroplocation(), tripSearchDto.getTripDate());
@@ -213,5 +214,5 @@ public class TripService {
                     return timeDifference <= 15 * 60 * 1000; // 15 minutes in milliseconds
                 })
                 .collect(Collectors.toList());
-    }
+    } */
 }
