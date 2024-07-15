@@ -6,6 +6,7 @@ import com.safar.Backend.payload.TripDto;
 import com.safar.Backend.payload.TripRiderDto;
 import com.safar.Backend.payload.TripSearchDto;
 import com.safar.Backend.repository.*;
+import com.safar.Backend.utils.GeoUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -215,4 +219,51 @@ public class TripService {
                 })
                 .collect(Collectors.toList());
     } */
+   public List<Trip> searchTrips(TripSearchDto searchDto) throws ParseException {
+       List<Trip> trips = tripRepository.findByTripDate(searchDto.getTripDate());
+
+       SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+       Date searchTime = dateFormat.parse(searchDto.getTripDeparturetime());
+
+       return trips.stream()
+               .filter(trip -> {
+                   try {
+                       Date tripTime = dateFormat.parse(trip.getTripDeparturetime());
+                       long difference = Math.abs(tripTime.getTime() - searchTime.getTime());
+                       long differenceInMinutes = difference / (60 * 1000);
+                       return differenceInMinutes <= 30;
+                   } catch (ParseException e) {
+                       return false;
+                   }
+               })
+               .filter(trip -> {
+                   if (trip.getTrippickup() == null || trip.getTripdrop() == null) {
+                       return false;
+                   }
+
+                   Trippickup tripPickup = trip.getTrippickup();
+                   Tripdrop tripDrop = trip.getTripdrop();
+                   Trippickup searchPickup = searchDto.getTrippickup();
+                   Tripdrop searchDrop = searchDto.getTripdrop();
+
+                   if (searchPickup == null || searchDrop == null) {
+                       return false;
+                   }
+
+                   double pickupDistance = GeoUtils.distance(
+                           searchPickup.getLat(),
+                           searchPickup.getLng(),
+                           tripPickup.getLat(),
+                           tripPickup.getLng());
+
+                   double dropDistance = GeoUtils.distance(
+                           searchDrop.getLat(),
+                           searchDrop.getLng(),
+                           tripDrop.getLat(),
+                           tripDrop.getLng());
+
+                   return pickupDistance <= 1 && dropDistance <= 1;
+               })
+               .collect(Collectors.toList());
+   }
 }

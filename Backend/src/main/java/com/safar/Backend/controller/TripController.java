@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -78,4 +79,10 @@ public class TripController {
            return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
        }
     }*/
+
+
+    @PostMapping("/search")
+    public List<Trip> searchTrips(@RequestBody TripSearchDto searchDto) throws ParseException {
+        return tripService.searchTrips(searchDto);
+    }
 }

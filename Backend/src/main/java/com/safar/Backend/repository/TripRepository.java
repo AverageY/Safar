@@ -22,6 +22,9 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 
     @Query("SELECT t FROM Trip t WHERE t.tripdrop.lat = :dropLat AND t.tripdrop.lng = :dropLng")
     List<Trip> findByDropCoordinates(@Param("dropLat") double dropLat, @Param("dropLng") double dropLng);
+
+    @Query("SELECT t FROM Trip t WHERE t.tripDate = :tripDate")
+    List<Trip> findByTripDate(@Param("tripDate") int tripDate);
 }
 
 
