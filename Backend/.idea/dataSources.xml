@@ -4,6 +4,7 @@
     <data-source source="LOCAL" name="sql12717941" uuid="3767aa5a-7c78-4326-98cb-4c9491a1b23b">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
+      <schema-control>FORBID</schema-control>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12717941</jdbc-url>
       <jdbc-additional-properties>
@@ -13,6 +14,7 @@
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
+      <auto-close enable="true" timeout="100" />
     </data-source>
   </component>
 </project>

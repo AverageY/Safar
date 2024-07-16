@@ -124,4 +124,62 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
     }
+
+
+    @PutMapping("/updateuser")
+    public ResponseEntity<?> updateUser(HttpServletRequest request, @RequestBody User updatedUser, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors.getAllErrors());
+        }
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new IllegalArgumentException("No active session found");
+        }
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            throw new IllegalArgumentException("No userId found in session");
+        }
+       User user = userRepository.findByUserId(userId);
+
+        if (updatedUser.getUserName() != null) {
+            user.setUserName(updatedUser.getUserName());
+        }
+        if (updatedUser.getMobileNum() != null) {
+            user.setMobileNum(updatedUser.getMobileNum());
+        }
+        if (updatedUser.getPswd() != null) {
+            user.setPswd(passwordEncoder.encode(updatedUser.getPswd()));
+        }
+        if (updatedUser.getUserType() != null) {
+            user.setUserType(updatedUser.getUserType());
+        }
+        if (updatedUser.getProfileImg() != null) {
+            user.setProfileImg(updatedUser.getProfileImg());
+        }
+
+        userRepository.save(user);
+        return ResponseEntity.ok(new ApiResponse(true, "User updated successfully"));
+
+
+    }
+
+    @DeleteMapping("/deleteuser")
+    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Integer userId = (Integer) session.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "User not logged in"));
+        }
+
+        User existingUser = userRepository.findById(userId).orElse(null);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "User not found"));
+        }
+
+        userRepository.delete(existingUser);
+        return ResponseEntity.ok(new ApiResponse(true, "User deleted successfully"));
+    }
+
+
 }

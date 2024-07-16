@@ -32,7 +32,7 @@ public class UserService {
         user.setPswd(passwordEncoder.encode(user.getPswd()));
         user = UserRepository.save(user);
         isSaved = true;
-        log.info(user.getPswd());
+
         return user;
 
 

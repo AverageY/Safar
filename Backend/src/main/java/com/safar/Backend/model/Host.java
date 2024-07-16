@@ -28,6 +28,6 @@ public class Host {
 
 
     @NotBlank(message = "Seat cant be blank")
-    @Size(min = 4, message = "Min size for pickup location is 4")
+    @Size(min = 4, message = "Min size for seat is 4")
     private String tripSeat;
 }

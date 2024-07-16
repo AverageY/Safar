@@ -80,6 +80,11 @@ public class TripService {
         SecureRandom random = new SecureRandom();
         final int otp = 1000 + random.nextInt(9000);
         trip.setTripOtp(otp);
+        TripSearchDto tripsearchdto = new TripSearchDto();
+        tripsearchdto.setTripDate(tripdto.getTripDate());
+        tripsearchdto.setTripDeparturetime(tripdto.getTripDeparturetime());
+        tripsearchdto.setTripdrop(tripdto.getTripdrop());
+        tripsearchdto.setTrippickup(tripdto.getTrippickup());
 
         double price;
         if (trip.getTripCabtype().equalsIgnoreCase("Sedan")) {
@@ -89,6 +94,19 @@ public class TripService {
         } else {
             throw new IllegalArgumentException("Invalid cab type");
         }
+
+        try {
+            List<Trip> matchingTrips = searchTrips(tripsearchdto);
+            if (matchingTrips.size() >=5) {
+                price*=1.4;
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
         trip.setTripPrice(price);
 
         host.setTripSeat(tripdto.getTripSeat());
@@ -122,9 +140,9 @@ public class TripService {
 
         // Check if the number of riders exceeds the limit based on cab type
         int currentRiders = trip.getRiders().size();
-        if (trip.getTripCabtype().equalsIgnoreCase("Sedan") && (currentRiders + Integer.parseInt(tripRiderDto.getTripSeat()) > 3)) {
+        if (trip.getTripCabtype().equalsIgnoreCase("Sedan") && (currentRiders  > 3)) {
             throw new IllegalArgumentException("Sedan cannot have more than 3 riders");
-        } else if (trip.getTripCabtype().equalsIgnoreCase("SUV") && (currentRiders + Integer.parseInt(tripRiderDto.getTripSeat()) > 5)) {
+        } else if (trip.getTripCabtype().equalsIgnoreCase("SUV") && (currentRiders > 5)) {
             throw new IllegalArgumentException("SUV cannot have more than 5 riders");
         }
 
@@ -166,7 +184,7 @@ public class TripService {
         if (cab == null) {
             throw new IllegalArgumentException("Cab not found");
         }
-
+    if(cab.getCabType().equalsIgnoreCase(trip.getTripCabtype())) {
         trip.setDriver(driver);
         trip.setCab(cab);
         trip.setTripStatus(true);
@@ -174,6 +192,7 @@ public class TripService {
         driverRepository.save(driver);
 
         trip = tripRepository.save(trip);
+    }
 
         return trip;
     }
@@ -205,20 +224,7 @@ public class TripService {
 
         return allTrips;
     }
-   /* public List<Trip> searchTrips( TripSearchDto tripSearchDto) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime departureTime = LocalTime.parse(tripSearchDto.getTripDeparturetime(), timeFormatter);
-        List<Trip> trips = tripRepository.findByTripPickuplocationAndTripDroplocationAndTripDate(tripSearchDto.getTripPickuplocation(), tripSearchDto.getTripDroplocation(), tripSearchDto.getTripDate());
 
-        return trips.stream()
-                .filter(trip -> {
-                    LocalTime tripDepartureTime = LocalTime.parse(trip.getTripDeparturetime(), timeFormatter);
-                    // Compare the trip's departure time with the given departure time within 15 minutes
-                    long timeDifference = Math.abs(java.time.Duration.between(tripDepartureTime, departureTime).toMinutes());
-                    return timeDifference <= 15 * 60 * 1000; // 15 minutes in milliseconds
-                })
-                .collect(Collectors.toList());
-    } */
    public List<Trip> searchTrips(TripSearchDto searchDto) throws ParseException {
        List<Trip> trips = tripRepository.findByTripDate(searchDto.getTripDate());
 
@@ -266,4 +272,24 @@ public class TripService {
                })
                .collect(Collectors.toList());
    }
+
+    public List<String> getBookedSeats(int tripId) {
+        Trip trip = tripRepository.findByTripId(tripId);
+        List<String> bookedSeats = new ArrayList<>();
+
+        // Assuming Trip has Host and Rider entities associated with it
+
+                bookedSeats.add(trip.getHost().getTripSeat());
+
+
+
+        for (Rider rider : trip.getRiders()) {
+            if (rider.getTripSeat() != null) {
+                bookedSeats.add(rider.getTripSeat());
+            }
+        }
+
+        return bookedSeats;
+    }
+
 }
