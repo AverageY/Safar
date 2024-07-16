@@ -9,6 +9,7 @@ import Navbar_2 from './Loged_In_Page/Loged_In_Page';
 import HomePage from './Homepage/Homepage';
 import Image_Picker from './Image_Picker/Image_Picker';
 import Loged_In_Page from './Loged_In_Page/Loged_In_Page';
+import Booking_Page from './Booking Page/Booking_Page'
 
 
 
@@ -23,4 +24,5 @@ export {
   Text_inputs,
   LogIn,
   DropDown,
+  Booking_Page,
 };

@@ -3,8 +3,21 @@ import { FaCar } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
 import { GoSignIn } from "react-icons/go";
 import { FaCircleUser } from "react-icons/fa6";
+import  Axios  from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const Navbar_buttons = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
+  
+  const navigate = useNavigate();
+  const LogOut = async()=>{
+    const response = await Axios.get('http://localhost:4000/logout', {withCredentials: true})
+    console.log(response)
+    setIsLogedIn(false)
+    navigate('/')
+
+  }
+
+
   return (
     <div>
       <ul>
@@ -28,6 +41,7 @@ const Navbar_buttons = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
           <li><IoSettingsSharp id='settings_icon' className='settings_icon navbar_icon' /></li>
         </button>
         }
+        <button onClick={LogOut}>LogOut</button>
       </ul>
     </div>
   );

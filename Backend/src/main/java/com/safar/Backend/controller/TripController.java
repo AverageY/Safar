@@ -79,7 +79,7 @@ public class TripController {
         }
     }
 
-   /* @PostMapping("/search")
+    /*@PostMapping("/search")
     public ResponseEntity<?> searchTrip(@RequestBody TripSearchDto tripSearchDto){
        try {
            return ResponseEntity.ok(tripService.searchTrips(tripSearchDto));

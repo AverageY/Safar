@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Login_page = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
   const navigate = useNavigate();
 
-  const url = "http://localhost:4000/safar/login";
+  const url = "http://localhost:4000/login";
   const [logInData, setLogInData] = useState({
     userName: "",
     pswd: "",
@@ -30,7 +30,7 @@ const Login_page = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
       const response = await Axios.post(url, {
         userName: logInData.userName,
         pswd: logInData.pswd,
-      });
+      }, {withCredentials: true});
 
       if (response.status === 200) {
         console.log(response)

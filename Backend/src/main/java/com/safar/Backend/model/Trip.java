@@ -40,7 +40,7 @@ public class Trip {
     private Cab cab;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = Trippickup.class)
-    @JoinColumn(name = "trippickup_id", referencedColumnName = "trippickup_id")
+    @JoinColumn(name = "trippickup_id", referencedColumnName = "trippickup_id", nullable = true)
 
     private Trippickup trippickup;
 
@@ -56,7 +56,7 @@ public class Trip {
     private String tripDroplocation;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, targetEntity = Tripdrop.class)
-    @JoinColumn(name = "tripdrop_id", referencedColumnName = "tripdrop_id")
+    @JoinColumn(name = "tripdrop_id", referencedColumnName = "tripdrop_id", nullable = true)
 
     private Tripdrop tripdrop;
 
