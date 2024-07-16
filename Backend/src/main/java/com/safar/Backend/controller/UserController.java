@@ -102,11 +102,11 @@ public class UserController {
                 new SecurityContextLogoutHandler().logout(request, response, auth);
             }
             SecurityContextHolder.clearContext();
-            request.getSession().removeAttribute("userId");
             request.getSession().invalidate();
+            request.getSession().removeAttribute("userId");
             return ResponseEntity.ok("User logged out successfully");
         } catch (Exception e) {
-            return ResponseEntity.ok("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
 

@@ -55,9 +55,7 @@ public class ProjectSecurityConfig {
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .logout(logoutConfigurer ->
-                        logoutConfigurer
-                                .logoutSuccessUrl("/logout?logout=true")
-
+                        logoutConfigurer.logoutSuccessUrl("/login?logout=true")
                                 .logoutSuccessHandler((request, response, authentication) -> {
                                     response.setStatus(HttpServletResponse.SC_OK);
                                 })
