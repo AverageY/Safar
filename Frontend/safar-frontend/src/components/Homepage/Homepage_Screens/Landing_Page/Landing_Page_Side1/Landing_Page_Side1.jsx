@@ -21,7 +21,7 @@ const Landing_Page_Side1 = () => {
     libraries: ['places'],
   });
   const navigate = useNavigate();
-  const url='http://localhost:4000/trip/search'
+  const url='https://safar-ffzg.onrender.com/trip/search'
   const autocompleteOriginRef = useRef(null);
   const autocompleteDestinationRef = useRef(null);
   const originRef = useRef(null);
@@ -130,15 +130,24 @@ return(
       <p>An Online Platform to Book, Add, Share a Cab at Minnimum Prices</p>
     </div>
     <div className='row'>
+      <div className='col-lg-6'>
       <Autocomplete>
-      <input className='mapinput' id="origin" value={searchData.origin} onChange={handleInputChange} ref={originRef}></input>
+      <input className='mapinput' id="origin" placeholder='Origin' value={searchData.origin} onChange={handleInputChange} ref={originRef}></input>
       </Autocomplete>
+      </div>
+      <div className='col-lg-6'>
       <Autocomplete>
-      <input className='mapinput' id="destination" value={searchData.destination} onChange={handleInputChange} ref={destinationRef}></input>
+      <input className='mapinput' id="destination" placeholder='Destination' value={searchData.destination} onChange={handleInputChange} ref={destinationRef}></input>
       </Autocomplete>
+      </div>
+     </div> 
+     <div className='row'>
+      <div className='col-lg-6'>
       <input type='date' id="tripDate" value={searchData.tripDate} onChange={handleInputChange} className='mapinput'></input>
-      <br></br>
+      </div>
+      <div className='col-lg-6'>
       <input type= 'time' id="tripDeparturetime" value={searchData.tripDeparturetime} onChange={handleInputChange} className='mapinput'></input>
+      </div>
     </div>
       <button onClick={searchCab} className='search_button'>
         Search

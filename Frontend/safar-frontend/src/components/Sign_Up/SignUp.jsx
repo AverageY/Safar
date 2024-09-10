@@ -7,7 +7,7 @@ import './SignUp.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const url = 'http://localhost:4000/safar/register';
+  const url = 'https://safar-ffzg.onrender.com/register';
   const inputRef = useRef('');
   const [image, setImage] = useState('');
   const [userData, setUserData] = useState({

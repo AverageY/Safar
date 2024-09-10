@@ -13,18 +13,25 @@ import Seat_Selector from '../../../Seat_Selector/Seat_Selector';
 import { useCallback } from 'react';
 import Seat_Selector_Suv from '../../../Seat_Selector_Suv/Seat_Selector_Suv';
 import Axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Trip_Summary from '../../../Trip_Summary/Trip_Summary';
+
 
 const Ride_Page = () => {
-  const url = 'http://localhost:4000/trip/add'
+  const url = 'https://safar-ffzg.onrender.com/trip/add'
   const center = { lat: 28.584, lng: 77.2945 };
   const [seatSelection, setSeatSelection] = useState('');
   const [infoPopUpSedan, setInfoPopUpSedan] = useState(false);
   const [infoPopUpSuv, setInfoPopUpSuv] = useState(false);
   const [carType, setCarType] = useState('option1');
+  const [selectSeat, setSelectSeat]= useState('')
+  const [trip, setTrip]= useState([])
+  const [tripSummary, setTripSummary]=useState(false)
   const [markerPosition, setMarkerPosition] = useState(() => {
     const savedPosition = localStorage.getItem('markerPosition');
     return savedPosition ? JSON.parse(savedPosition) : null;
   });
+  const navigate = useNavigate();
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_TOKEN,
@@ -45,7 +52,7 @@ const Ride_Page = () => {
     tripDeparturetime: '',
     tripDate: '',
     tripCabtype: carType,
-    tripSeat: '',
+    tripSeat: selectSeat,
   });
 
   const handleInputChange = (e) => {
@@ -130,7 +137,9 @@ const Ride_Page = () => {
     setDestinationCoords(destinationLatLng);
     console.log(destinationLocation)
     console.log(destinationLatLng)
-
+    console.log(numericDistance)
+    console.log(travel_Date)
+    
     e.preventDefault();
     try {
       const response = await Axios.post(url, {
@@ -142,24 +151,28 @@ const Ride_Page = () => {
         tripDistance: numericDistance,
         tripDeparturetime: tripData.tripDeparturetime,
         tripCabtype: carType,
-        tripSeat: 'SEAT1',
+        tripSeat: selectSeat,
       }, { withCredentials: true });
       console.log(response)
-      if (response.status === 201) {
-        console.log(response.status)
+      if (response.status === 200) {
+        setTrip(response.data)
+        navigate('/tripSummary', {state:{trip: response.data}})
       }
     } catch (error) {
       console.error('Error signing up:', error);
     }
   }
 
-  function clearRoute() {
-    setDirectionsResponse(null);
-    setDistance('');
-    setDuration('');
-    originRef.current.value = '';
-    destinationRef.current.value = '';
-  }
+  const getSeatSelection = (cartype) => {
+    switch (cartype) {
+      case 'SEDAN':
+        return <Seat_Selector selectSeat={selectSeat} setSelectSeat={setSelectSeat} />;
+      case 'SUV':
+        return <Seat_Selector_Suv selectSeat={selectSeat} setSelectSeat={setSelectSeat}/>;
+      default:
+        return null;
+    }
+  };
 
   const handleRadioChange = (value) => {
     setCarType(value);
@@ -198,6 +211,8 @@ const Ride_Page = () => {
             <p className='addCabText'>Add a Cab!</p>
           </div>
         </div>
+
+
         <div className='row'>
           <div className='col-lg-6'>
             <label>Select Your Starting Point:</label>
@@ -254,17 +269,6 @@ const Ride_Page = () => {
       </div>
     </div>
   );
-};
-
-const getSeatSelection = (cartype) => {
-  switch (cartype) {
-    case 'SEDAN':
-      return <Seat_Selector />;
-    case 'SUV':
-      return <Seat_Selector_Suv />;
-    default:
-      return null;
-  }
 };
 
 export default Ride_Page;

@@ -6,7 +6,7 @@ import car_sedan_image from '../../assets/Screenshot 2024-07-04 at 2.38.36 PM.
 
 
 
-const Seat_Selector_Suv = () => {
+const Seat_Selector_Suv = ({selectSeat, setSelectSeat}) => {
 
 
   return(
@@ -19,8 +19,8 @@ const Seat_Selector_Suv = () => {
        <div className='col-lg-3'>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT1')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-2'>
@@ -36,18 +36,18 @@ const Seat_Selector_Suv = () => {
         <div className='col-lg-3'>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT2')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT3')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT4')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-3'>
@@ -58,18 +58,18 @@ const Seat_Selector_Suv = () => {
         <div className='col-lg-3'>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT5')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT6')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-2'>
-           <button className='seat_button'>
-            <SiApachecouchdb className='seatselectoricon' />
+        <button onClick={()=> {setSelectSeat('SEAT7')}}>
+           <SiApachecouchdb className='seatselectoricon' />
            </button>
         </div>
         <div className='col-lg-3'>

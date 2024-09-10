@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
   // Function to check if user is logged in
   const checkAuth = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/safar/checkAuth', { withCredentials: true });
+      const response = await axios.get('https://safar-ffzg.onrender.com/checkAuth', { withCredentials: true });
       if (response.status === 200) {
         setIsLoggedIn(true);
         setUser(response.data.user);
@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
   // Function to log in
   const login = async (credentials) => {
     try {
-      const response = await axios.post('http://localhost:4000/safar/login', credentials, { withCredentials: true });
+      const response = await axios.post('https://safar-ffzg.onrender.com/login', credentials, { withCredentials: true });
       if (response.status === 200) {
         setIsLoggedIn(true);
         setUser(response.data.user);
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
   // Function to log out
   const logout = async () => {
     try {
-      await axios.post('http://localhost:4000/safar/logout', {}, { withCredentials: true });
+      await axios.post('https://safar-ffzg.onrender.com/logout', {}, { withCredentials: true });
       setIsLoggedIn(false);
       setUser(null);
     } catch (error) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Trips from '../Trips/Trips';
 
-const Booking_Page = ()=>{
+const Booking_Page = ({})=>{
 
   const location = useLocation();
   const trips = location.state?.trips || [];
@@ -15,7 +15,9 @@ const Booking_Page = ()=>{
      tripPickuplocation={trips.tripPickuplocation}
      tripDroplocation={trips.tripDroplocation}
      tripDeparturetime={trips.tripDeparturetime}
-   
+     tripId={trips.tripId}
+     tripCabtype= {trips.tripCabtype}
+     tripPrice ={trips.tripPrice}
    />
   }
 

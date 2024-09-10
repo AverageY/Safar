@@ -13,9 +13,9 @@ import Loged_In_Landing_Page from './Loged_In_Landing_Page/Loged_In_Landing_Page
 
 function Loged_In_Page({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) {
   
-  
   setIsLogedIn(true)
-
+  
+  
   return (
     <div>
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} isLogedIn={isLogedIn} setIsLogedIn={setIsLogedIn} />

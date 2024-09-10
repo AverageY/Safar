@@ -1,0 +1,13 @@
+.selectCabbox{
+    width: 400px;
+    height: 200px;
+    margin-top: 10px;
+    background-color: #fff;
+    background: linear-gradient(#f8f8f8, #fff);
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    margin: 1.5rem;
+
+}

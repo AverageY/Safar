@@ -10,7 +10,7 @@ const Navbar_buttons = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
   
   const navigate = useNavigate();
   const LogOut = async()=>{
-    const response = await Axios.get('http://localhost:4000/logout', {withCredentials: true})
+    const response = await Axios.get('https://safar-ffzg.onrender.com/logout', {withCredentials: true})
     console.log(response)
     setIsLogedIn(false)
     navigate('/')
@@ -41,7 +41,9 @@ const Navbar_buttons = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
           <li><IoSettingsSharp id='settings_icon' className='settings_icon navbar_icon' /></li>
         </button>
         }
-        <button onClick={LogOut}>LogOut</button>
+        {
+        isLogedIn && <button onClick={LogOut}>LogOut</button>
+        }
       </ul>
     </div>
   );

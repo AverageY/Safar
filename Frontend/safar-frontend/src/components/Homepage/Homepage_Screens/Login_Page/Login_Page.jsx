@@ -5,17 +5,18 @@ import { Link } from "react-router-dom";
 import Log_in_page_image from "../../../../assets/Log_in_page_2.jpg";
 import "./Login_page.css";
 import { useNavigate } from "react-router-dom";
-
+import { useContext } from "react";
+import { UserContext } from "../../../../context/userContext";
 
 const Login_page = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
   const navigate = useNavigate();
 
-  const url = "http://localhost:4000/login";
+  const url = "https://safar-ffzg.onrender.com/login";
   const [logInData, setLogInData] = useState({
     userName: "",
     pswd: "",
   });
-  
+  const { setDriver } = useContext(UserContext);
   const handleInputChange = (e) => {
     setLogInData({
       ...logInData,
@@ -34,9 +35,17 @@ const Login_page = ({activeTab, setActiveTab, isLogedIn, setIsLogedIn}) => {
 
       if (response.status === 200) {
         console.log(response)
-        // Redirect to the next page upon successful login
         navigate("/Login");
         setActiveTab('animation')
+
+        const userType = await Axios.get('https://safar-ffzg.onrender.com/user', { withCredentials: true })
+        console.log(userType)
+        if(userType.data.userType === 'Driver'){
+          setDriver(true)
+        }else{
+          setDriver(false)
+        }
+      
       } else {
         console.error("Login failed");
       }

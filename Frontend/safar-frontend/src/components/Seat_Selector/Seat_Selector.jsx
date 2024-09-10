@@ -6,7 +6,7 @@ import car_sedan_image from '../../assets/Screenshot 2024-07-04 at 2.38.36 PM.
 
 
 
-const Seat_Selector = () => {
+const Seat_Selector = ({selectSeat, setSelectSeat}) => {
 
 
   return(
@@ -19,7 +19,9 @@ const Seat_Selector = () => {
        <div className='col-lg-3'>
         </div>
         <div className='col-lg-2'>
+           <button onClick={()=> {setSelectSeat('SEAT1')}}>
            <SiApachecouchdb className='seatselectoricon' />
+           </button>
         </div>
         <div className='col-lg-2'>
         </div>
@@ -34,13 +36,19 @@ const Seat_Selector = () => {
         <div className='col-lg-3'>
         </div>
         <div className='col-lg-2'>
-           <SiApachecouchdb className='seatselectoricon'/>
+        <button onClick={()=> {setSelectSeat('SEAT2')}}>
+           <SiApachecouchdb className='seatselectoricon' />
+           </button>
         </div>
         <div className='col-lg-2'>
-           <SiApachecouchdb className='seatselectoricon'/>
+        <button onClick={()=> {setSelectSeat('SEAT3')}}>
+           <SiApachecouchdb className='seatselectoricon' />
+           </button>
         </div>
         <div className='col-lg-2'>
-           <SiApachecouchdb className='seatselectoricon'/>
+        <button onClick={()=> {setSelectSeat('SEAT4')}}>
+           <SiApachecouchdb className='seatselectoricon' />
+           </button>
         </div>
         <div className='col-lg-3'>
         </div>
