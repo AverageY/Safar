@@ -4,6 +4,7 @@ import Axios from "axios";
 import Trips from "../../Trips/Trips";
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion' 
+import Landing_Page_Side1 from "../../Homepage/Homepage_Screens/Landing_Page/Landing_Page_Side1/Landing_Page_Side1";
 const Loged_In_Landing_Page = () => {
     const [cabs, setCabs] = useState([]);
     const navigate = useNavigate();
@@ -43,11 +44,8 @@ const Loged_In_Landing_Page = () => {
             <div className="col-lg-3">
                 <motion.div initial={{ x: -500 }} animate={{ x: 0 }} transition={{ duration: 1.3 }} className="side_bar">
                     <div className="side_bar_search">
-                        <p>Search a Trip</p>
-                        <input className='mapinput' id="origin" placeholder="Origin" />
-                        <input className='mapinput' id="destination" placeholder="Destination" />
-                        <input className='mapinput' id="tripDate" type="date" />
-                        <input className='mapinput' id="tripDeparturetime" type="time" />
+                        <Landing_Page_Side1/>
+
                     </div>
                 </motion.div>
             </div>
