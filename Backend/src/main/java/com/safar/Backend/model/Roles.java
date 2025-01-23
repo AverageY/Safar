@@ -2,7 +2,6 @@ package com.safar.Backend.model;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-
 import jakarta.persistence.*;
 
 @Data
@@ -11,13 +10,10 @@ import jakarta.persistence.*;
 public class Roles extends BaseEntity {
 
     @Id
-    @Column(name = "role_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-
+    @Column(name = "role_id")
     private int roleId;
 
-    @Column(name = "role_name")
+    @Column(name = "role_name", unique = true, nullable = false)
     private String roleName;
-
 }
-

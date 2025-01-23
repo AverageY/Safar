@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TripRiderDto {
-    @NotBlank
+
     private Trippickup trippickup;
     @NotBlank
     private String tripSeat;

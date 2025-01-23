@@ -11,17 +11,17 @@ import java.util.Date;
 public class TripDto {
     @NotBlank
     private String tripPickuplocation;
-    @NotBlank
+
     private Trippickup trippickup;
     @NotBlank
     private String tripDroplocation;
-    @NotBlank
+
     private Tripdrop tripdrop;
-    @NotBlank
+
     private double tripDistance;
     @NotBlank
     private String tripDeparturetime;
-    @NotBlank
+
     private int tripDate;
     @NotBlank
     private String tripCabtype;

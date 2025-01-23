@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("com.safar.Backend.repository")
 @EntityScan("com.safar.Backend.model")
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
+
 public class BackendApplication {
 
 	public static void main(String[] args) {

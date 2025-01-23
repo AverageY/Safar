@@ -38,8 +38,9 @@ public class User extends BaseEntity{
     @Column(unique = true)
     private String mobileNum;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id",nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER) // Changed from @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
+    @JsonIgnore // Prevents serialization issues
     private Roles roles;
 
     @NotBlank(message = "Please upload a profile picture")
