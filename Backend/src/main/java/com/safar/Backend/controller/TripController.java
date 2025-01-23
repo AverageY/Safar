@@ -62,6 +62,8 @@ public class TripController {
     @GetMapping("/usertrips")
     public ResponseEntity<?> getTripofUser(HttpServletRequest request) {
         try {
+
+
             List<Trip> trips = tripService.getTripsOfUser(request);
             return ResponseEntity.ok(trips);
         } catch (RuntimeException e) {

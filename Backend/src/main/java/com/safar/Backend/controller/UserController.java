@@ -1,6 +1,8 @@
 package com.safar.Backend.controller;
 
+import com.safar.Backend.constant.SafarConstant;
 import com.safar.Backend.model.Driver;
+import com.safar.Backend.model.Roles;
 import com.safar.Backend.model.User;
 import com.safar.Backend.payload.ApiResponse;
 import com.safar.Backend.payload.LoginDto;
@@ -14,14 +16,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +61,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
         try {
+            Roles role = rolesRepository.findByRoleName(SafarConstant.BASE_ROLE)
+                    .orElseThrow(() -> new RuntimeException("Role not found: " + SafarConstant.BASE_ROLE));
+
+            // Assign the role to the user
+
+
             user = userService.createNewUser(user);
             HttpSession session = request.getSession(true);
             session.setAttribute("userId", user.getUserId());
@@ -70,31 +82,51 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ApiResponse(false, e.getMessage()));
         }
     }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request) {
-        String userName = loginDto.getUserName();
-        String pswd = loginDto.getPswd();
-
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userName, pswd);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
         try {
-            Authentication auth = safarSecurityAuthenticationProvider.authenticate(authReq);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            // Create authentication token from request
+            UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken
+                    .unauthenticated(loginDto.getUserName(), loginDto.getPswd());
 
+            // Authenticate using your custom provider
+            Authentication authentication = safarSecurityAuthenticationProvider.authenticate(token);
+
+            // Create and set security context
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+            SecurityContextHolder.setContext(context);
+
+            // Save context in the session
+            new HttpSessionSecurityContextRepository().saveContext(context, request, response);
+
+            // Set user details in session
             HttpSession session = request.getSession(true);
-            if (auth != null && auth.getPrincipal() instanceof User) {
-                User user = (User) auth.getPrincipal();
+            if (authentication.getPrincipal() instanceof User user) {
                 session.setAttribute("userId", user.getUserId());
-                log.info("User logged in: " + user.toString());
-                log.info("Session ID: " + session.getAttribute("userId").toString());
+                log.info("Login successful for user: {}", user.getUserName());
+                log.info("Session ID: {}", session.getId());
             }
-            return ResponseEntity.ok(new ApiResponse(true, "User logged in successfully"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "Invalid credentials"));
+            log.info("Login attempt - username: {}, password length: {}",
+                    loginDto.getUserName(), loginDto.getPswd().length());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE,
+                            "JSESSIONID=" + session.getId() + "; Path=/; Secure; HttpOnly; SameSite=None")
+                    .body(new ApiResponse(true, "User logged in successfully"));
+
+        } catch (AuthenticationException e) {
+            log.debug("Login attempt - username: {}, password length: {}",
+                    loginDto.getUserName(), loginDto.getPswd().length());
+            log.error("Login failed: ", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse(false, "Invalid credentials"));
         }
     }
 
-    @GetMapping("/logout")
+            @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

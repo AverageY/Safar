@@ -10,12 +10,12 @@ import java.util.Date;
 
 @Data
 public class TripSearchDto {
-    @NotBlank
+
     private Trippickup trippickup;
-    @NotBlank
+
     private Tripdrop tripdrop;
     @NotBlank
     private String tripDeparturetime;
-    @NotBlank
+
     private int tripDate;
 }
